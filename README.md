@@ -1,5 +1,7 @@
 # postgres fdw clickhouse
 
+> with https://github.com/adjust/clickhouse_fdw
+
 ## clickhouse data init
 
 * create table
@@ -26,18 +28,14 @@ docker run -i yandex/clickhouse-client  --format_csv_delimiter="|" --host ${serv
 ## use clickhouse fdw
 
 ```code
-CREATE EXTENSION clickhousedb_fdw;
+CREATE EXTENSION clickhouse_fdw;
 
-CREATE SERVER myserver FOREIGN DATA WRAPPER clickhousedb_fdw OPTIONS(dbname 'default', driver '/opt/clickhousedb/libclickhouseodbc.so', host 'server');
+CREATE SERVER clickhouse_svr FOREIGN DATA WRAPPER clickhouse_fdw OPTIONS(dbname 'default', host 'server');
 
-CREATE USER MAPPING FOR postgres SERVER myserver;
-
-CREATE FOREIGN TABLE wikistat (
-	project text,
-	subproject text,
-	hits int,
-	size int
-) SERVER myserver OPTIONS (table_name 'wikistat');
+CREATE USER MAPPING FOR postgres SERVER clickhouse_svr
+       OPTIONS (user 'default', password '');
+       
+IMPORT FOREIGN SCHEMA "default" FROM SERVER clickhouse_svr INTO public;
 
 select * from wikistat;
 ```

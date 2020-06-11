@@ -15,7 +15,7 @@ services:
       image: yandex/clickhouse-client
       command: ['--host', 'server']
     pgspider:
-      image: dalongrong/pgspider:clickhouse
+      image: dalongrong/pgspider:clickhourse2
       ports: 
       - "5432:5432"
       environment: 
